@@ -45,7 +45,7 @@ def get_chroma_path():
 
 def get_api_key():
     """Get the Google API key"""
-    return os.getenv("api_key")
+    return os.getenv("GOOGLE_API_KEY")
 
 def get_embedding_model():
     """Get the embedding model name"""

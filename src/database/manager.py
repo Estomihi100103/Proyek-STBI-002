@@ -1,183 +1,126 @@
-"""
-Database manager for the RAG Chatbot application
-"""
 import sqlite3
-from datetime import datetime
-from typing import List, Tuple
 import os
+from typing import List, Tuple
 from ..config import get_db_path
 
 class DatabaseManager:
-    """Manages SQLite database operations for the chat application."""
+    """Manages SQLite database operations for the RAG Chatbot."""
 
-    def __init__(self, db_name: str = None):
-        """Initialize database connection and create tables.
+    def __init__(self, db_path: str = None):
+        """Initialize database connection.
         
         Args:
-            db_name: Optional database file path. If None, uses the default path from config.
+            db_path: Path to SQLite database file. If None, uses config default.
         """
-        self.db_name = db_name or get_db_path()
-        
-        # Ensure the directory exists
-        os.makedirs(os.path.dirname(self.db_name), exist_ok=True)
-        
-        self._init_db()
+        self.db_path = db_path or get_db_path()
+        os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
+        self._initialize_database()
 
-    def _init_db(self) -> None:
-        """Create necessary tables if they don't exist."""
-        with sqlite3.connect(self.db_name) as conn:
+    def _initialize_database(self) -> None:
+        """Initialize database schema."""
+        with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
-            
-            # Create Conversation table
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS Conversation (
-                    conversation_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    title TEXT,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            # Create conversations table
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS conversations (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
-            ''')
-
-            # Create Message table
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS Message (
-                    message_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    conversation_id INTEGER NOT NULL,
+            """)
+            # Create messages table
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS messages (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    conversation_id INTEGER,
                     role TEXT NOT NULL,
                     content TEXT NOT NULL,
-                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (conversation_id) REFERENCES Conversation(conversation_id)
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (conversation_id) REFERENCES conversations(id)
                 )
-            ''')
-
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS DocumentChunk (
-                    chunk_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    content TEXT NOT NULL,
+            """)
+            # Create document_chunks table
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS document_chunks (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    chunk_text TEXT NOT NULL,
                     vector_id TEXT NOT NULL,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
-            ''')
-
+            """)
             conn.commit()
 
-    def add_conversation(self, title: str = None) -> int:
-        """Add a new conversation and return its conversation_id.
+    def add_conversation(self, title: str) -> int:
+        """Add a new conversation to the database.
         
         Args:
-            title: Optional title for the conversation.
+            title: Title of the conversation
             
         Returns:
-            conversation_id: The ID of the newly created conversation
+            ID of the new conversation
         """
-        with sqlite3.connect(self.db_name) as conn:
+        with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
-            cursor.execute(
-                "INSERT INTO Conversation (title) VALUES (?)",
-                (title,)
-            )
+            cursor.execute("INSERT INTO conversations (title) VALUES (?)", (title,))
             conn.commit()
             return cursor.lastrowid
 
-    def add_message(self, conversation_id: int, role: str, content: str) -> int:
-        """Add a new message to a conversation.
+    def get_all_conversations(self) -> List[Tuple[int, str]]:
+        """Get all conversations from the database.
+        
+        Returns:
+            List of tuples containing (id, title)
+        """
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, title FROM conversations ORDER BY created_at DESC")
+            return cursor.fetchall()
+
+    def add_message(self, conversation_id: int, role: str, content: str) -> None:
+        """Add a message to a conversation.
         
         Args:
-            conversation_id: The ID of the conversation to add the message to
-            role: The role of the message sender (user or assistant)
-            content: The message content
-            
-        Returns:
-            message_id: The ID of the newly created message
+            conversation_id: ID of the conversation
+            role: Role of the message sender ('user' or 'assistant')
+            content: Message content
         """
-        with sqlite3.connect(self.db_name) as conn:
+        with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO Message (conversation_id, role, content) VALUES (?, ?, ?)",
+                "INSERT INTO messages (conversation_id, role, content) VALUES (?, ?, ?)",
                 (conversation_id, role, content)
             )
             conn.commit()
-            return cursor.lastrowid
 
-    def add_document_chunk(self, content: str, vector_id: str) -> int:
+    def get_messages(self, conversation_id: int) -> List[Tuple[int, int, str, str, str]]:
+        """Get all messages for a conversation.
+        
+        Args:
+            conversation_id: ID of the conversation
+            
+        Returns:
+            List of tuples containing (id, conversation_id, role, content, created_at)
+        """
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT id, conversation_id, role, content, created_at FROM messages "
+                "WHERE conversation_id = ? ORDER BY created_at",
+                (conversation_id,)
+            )
+            return cursor.fetchall()
+
+    def add_document_chunk(self, chunk_text: str, vector_id: str) -> None:
         """Add a document chunk to the database.
         
         Args:
-            content: The text content of the chunk
-            vector_id: The ID of the vector in the vector store
-            
-        Returns:
-            chunk_id: The ID of the newly created chunk
+            chunk_text: Text of the document chunk
+            vector_id: Vector ID associated with the chunk
         """
-        with sqlite3.connect(self.db_name) as conn:
+        with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO DocumentChunk (content, vector_id) VALUES (?, ?)",
-                (content, vector_id)
-            )
-            conn.commit()
-            return cursor.lastrowid
-
-    def get_conversation_messages(self, conversation_id: int) -> List[Tuple[str, str]]:
-        """Retrieve all messages for a given conversation.
-        
-        Args:
-            conversation_id: The ID of the conversation to get messages for
-            
-        Returns:
-            List of (role, content) tuples representing messages in the conversation
-        """
-        with sqlite3.connect(self.db_name) as conn:
-            cursor = conn.cursor()
-            cursor.execute(
-                "SELECT role, content FROM Message WHERE conversation_id = ? ORDER BY timestamp",
-                (conversation_id,)
-            )
-            return cursor.fetchall()
-
-    def get_all_conversations(self) -> List[Tuple[int, str]]:
-        """Retrieve all conversations.
-        
-        Returns:
-            List of (conversation_id, title) tuples for all conversations
-        """
-        with sqlite3.connect(self.db_name) as conn:
-            cursor = conn.cursor()
-            cursor.execute(
-                "SELECT conversation_id, title FROM Conversation ORDER BY created_at DESC"
-            )
-            return cursor.fetchall()
-    
-    def update_conversation_title(self, conversation_id: int, title: str) -> None:
-        """Update the title of a conversation.
-        
-        Args:
-            conversation_id: The ID of the conversation to update
-            title: The new title for the conversation
-        """
-        with sqlite3.connect(self.db_name) as conn:
-            cursor = conn.cursor()
-            cursor.execute(
-                "UPDATE Conversation SET title = ? WHERE conversation_id = ?",
-                (title, conversation_id)
-            )
-            conn.commit()
-    
-    def delete_conversation(self, conversation_id: int) -> None:
-        """Delete a conversation and all its messages.
-        
-        Args:
-            conversation_id: The ID of the conversation to delete
-        """
-        with sqlite3.connect(self.db_name) as conn:
-            cursor = conn.cursor()
-            # Delete messages first (foreign key constraint)
-            cursor.execute(
-                "DELETE FROM Message WHERE conversation_id = ?",
-                (conversation_id,)
-            )
-            # Then delete the conversation
-            cursor.execute(
-                "DELETE FROM Conversation WHERE conversation_id = ?",
-                (conversation_id,)
+                "INSERT INTO document_chunks (chunk_text, vector_id) VALUES (?, ?)",
+                (chunk_text, vector_id)
             )
             conn.commit()
