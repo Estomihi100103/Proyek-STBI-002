@@ -90,5 +90,5 @@ You can customize the application by modifying the values in `src/config.py` or 
 Key parameters:
 - `chunk_size`: Size of document chunks (default: 1024)
 - `chunk_overlap`: Overlap between chunks (default: 100)
-- `embedding_model`: Model used for embeddings (default: models/text-embedding-004)
+- `embedding_model`: Model used for embeddings (default: gemini-embedding-exp-03-07)
 - `llm_model`: LLM model for generation (default: gemini-2.0-flash)

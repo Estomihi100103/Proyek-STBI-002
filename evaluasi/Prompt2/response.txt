@@ -1,0 +1,5 @@
+Pelanggaran berat memiliki poin sebagai berikut:
+
+    Level I: 25-30 poin
+    Level II: 31-75 poin
+    Level III: 76 poin atau lebih

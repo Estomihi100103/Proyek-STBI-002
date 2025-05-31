@@ -20,24 +20,15 @@ def create_evaluate_chain() -> RunnableSequence:
     )
     structured_output = llm.with_structured_output(EvaluateDocs)
 
-    system_prompt = """You are an expert evaluator assessing whether a document is relevant to a user's question.
-    Instructions:
-    1. Review the document content and the user's question.
-    2. Determine if the document provides sufficient information to answer the question.
-    3. Consider:
-       - Relevance of main topics to the question.
-       - Depth and specificity of information.
-       - Alignment with the question's intent.
-    4. Provide a binary score: 'yes' (relevant) or 'no' (not relevant).
-
-    Example:
-    Question: "What is AI?"
-    Document: "Artificial Intelligence (AI) is the simulation of human intelligence in machines."
-    Score: yes
-
-    Question: "What is AI?"
-    Document: "The history of the Roman Empire spans several centuries."
-    Score: no
+    system_prompt = """Anda adalah evaluator ahli untuk menilai apakah suatu dokumen relevan terhadap pertanyaan pengguna.
+    Instruksi:
+    Tinjau isi dokumen dan pertanyaan pengguna dengan cermat.
+    Tentukan hanya jika dokumen tersebut memberikan informasi yang relevan untuk menjawab pertanyaan.
+    Jangan membuat asumsi atau mengisi kekosongan informasi.
+    Berikan hanya satu dari dua jawaban berikut:
+        1. 'ya' → Dokumen relevan dan sepenuhnya mendukung jawaban atas pertanyaan.
+        2. 'tidak' → Dokumen tidak relevan secara jelas, atau informasinya tidak cukup.
+    Bersikap tegas. Jika ragu, pilih 'tidak'.
     """
 
     evaluate_prompt = ChatPromptTemplate.from_messages(

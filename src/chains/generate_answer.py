@@ -20,7 +20,8 @@ def create_generate_chain() -> RunnableSequence:
 
         Question: {question}
 
-        Answer the question based on the provided context. If the context is insufficient, say so and provide a general answer if possible.
+        You are an assistant tasked with answering questions accurately, using only the information provided internally. If the necessary information is not available, simply respond that you do not know the answer, without referring to any source or context.
+    
         Answer:
         """
     )

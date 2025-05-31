@@ -85,6 +85,9 @@ class RetrievalProcessor:
             
             # Chunk text
             chunks = self.text_splitter.split_text(text)
+            
+            print(f"Split text into {len(chunks)} chunks")
+            
             logger.info(f"Split text into {len(chunks)} chunks")
             
             # Generate embeddings and store in Chroma DB
@@ -108,30 +111,22 @@ class RetrievalProcessor:
 
     def retrieve_context(self, 
                         query: str, 
-                        k: int = 10, 
-                        initial_k: int = 50, 
-                        final_k: int = 3) -> List[str]:
-        """Retrieve relevant contexts using hybrid retrieval approach.
+                        k: int = 3) -> List[str]:
+        """Retrieve relevant contexts using BM25 retrieval approach.
         
         Args:
             query: User query
-            k: Number of BM25 candidates
-            initial_k: Number of initial vector candidates
-            final_k: Number of final contexts to return
+            k: Number of final contexts to return (default=2)
             
         Returns:
             List of relevant context passages
         """
-        try:
-            logger.info(f"Retrieving context for query: {query}")
-            
+        try:            
             # Step 1: Initial dense retrieval
             results = self.vector_store.similarity_search_with_score(
                 query=query,
-                k=initial_k
-            )
-            logger.info(f"Initial dense retrieval returned {len(results)} results")
-            
+                k=5  # Keep initial retrieval broad
+            )                        
             # Check if no results were found
             if not results:
                 logger.warning("No documents found in initial retrieval")
@@ -139,41 +134,24 @@ class RetrievalProcessor:
             
             # Store text, score, and vector ID
             dense_contexts = [(doc.page_content, score, doc.metadata.get('id', None)) 
-                             for doc, score in results]
+                            for doc, score in results]
             
             # Step 2: BM25 indexing
             tokenized_chunks = [word_tokenize(content.lower()) for content, _, _ in dense_contexts]
             bm25 = BM25Okapi(tokenized_chunks)
             
-            # Step 3: BM25 re-ranking
+            # Step 3: BM25 ranking
             tokenized_query = word_tokenize(query.lower())
             bm25_scores = bm25.get_scores(tokenized_query)
             
-            # Step 4: Sort by BM25 score
+            # Step 4: Sort by BM25 score and select top k
             sorted_results = sorted(zip(dense_contexts, bm25_scores), 
-                                   key=lambda x: x[1], reverse=True)[:k]
-            bm25_contexts = [(content, vector_id) for (content, _, vector_id), _ in sorted_results]
-            logger.info(f"BM25 re-ranking selected {len(bm25_contexts)} contexts")
-            
-            # Step 5: Second dense retrieval
-            vector_ids = [vector_id for _, vector_id in bm25_contexts if vector_id]
-            
-            # If no valid vector IDs, return BM25 results
-            if not vector_ids:
-                logger.warning("No valid vector IDs found, returning BM25 contexts")
-                return [text for text, _ in bm25_contexts][:final_k]
-            
-            # Perform final similarity search on selected vectors
-            final_results = self.vector_store.similarity_search_with_score(
-                query=query,
-                k=final_k,
-                filter={"id": {"$in": vector_ids}}
-            )
-            final_contexts = [doc.page_content for doc, score in final_results]
-            logger.info(f"Final retrieval returned {len(final_contexts)} contexts")
+                                key=lambda x: x[1], reverse=True)[:k]
+            final_contexts = [content for (content, _, _), _ in sorted_results]
+            logger.info(f"BM25 ranking selected {len(final_contexts)} contexts")
             
             return final_contexts
             
         except Exception as e:
             logger.error(f"Error retrieving context: {str(e)}", exc_info=True)
-            return []  
+            return []

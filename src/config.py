@@ -27,9 +27,9 @@ def setup_environment():
     load_dotenv()
     
     # Configure Gemini API
-    api_key = os.getenv("api_key")
+    api_key = os.getenv("GOOGLE_API_KEY")
     if not api_key:
-        raise ValueError("API key not found. Please set 'api_key' in .env file.")
+        raise ValueError("API key not found. Please set 'GOOGLE_API_KEY' in .env file.")
     genai.configure(api_key=api_key)
     
     # Download NLTK data if needed

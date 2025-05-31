@@ -1,0 +1,16 @@
+Nilai perilaku ditetapkan dengan mempertimbangkan tindakan terpuji dan 
+pelanggaran mahasiswa   dan dinyatakan dalam nilai huruf sebagai berikut:  
+A  
+(4,0) berarti nilai sangat baik 
+AB 
+B  
+BC 
+C  
+D 
+E  
+(3,5) berarti nilai antara baik dengan sangat baik 
+(3,0) berarti nilai baik 
+(2,5) berarti nilai antara cukup dengan baik 
+(2,0) berarti nilai cukup 
+(1,0) berarti nilai kurang 
+(0) berarti gagal 

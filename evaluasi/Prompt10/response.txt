@@ -1,0 +1,37 @@
+Berikut adalah rincian kategori jenis pelanggaran di Institut Teknologi Del berdasarkan skor poinnya:
+
+1. Pelanggaran Ringan:
+
+    Level I: Skor poin 1-5
+    Level II: Skor poin 6-10
+
+2. Pelanggaran Sedang:
+
+    Level I: Skor poin 11-15
+    Level II: Skor poin 16-24
+
+Mahasiswa dikategorikan melakukan pelanggaran sedang level II jika:
+
+    Melakukan pelanggaran dengan bobot poin 16 sampai dengan poin 24, atau
+    Melakukan 2 kali pelanggaran sedang level I.
+
+3. Pelanggaran Berat:
+
+    Level I: Skor poin 25-30
+
+Mahasiswa dikategorikan melakukan pelanggaran berat level I jika:
+
+    Melakukan pelanggaran dengan bobot poin 25 sampai dengan poin 30, atau
+
+    Melakukan pelanggaran sedang level II yang disertai dengan pelanggaran sedang lainnya.
+
+    Level II: Skor poin 31-75
+
+Mahasiswa dikategorikan melakukan pelanggaran berat level II jika:
+
+    Melakukan pelanggaran dengan bobot poin 31 sampai dengan poin 75, atau
+    Melakukan pelanggaran berat level I yang disertai dengan pelanggaran sedang dan/atau berat level I.
+
+Pengaruh Skor terhadap Klasifikasi Pelanggaran:
+
+Pembagian skor ini secara langsung menentukan klasifikasi pelanggaran. Semakin tinggi skor poin yang diperoleh dari suatu pelanggaran, semakin berat kategori pelanggaran tersebut. Skor poin menjadi dasar untuk menentukan apakah suatu pelanggaran tergolong ringan, sedang, atau berat, serta sub-levelnya. Selain itu, akumulasi pelanggaran (misalnya, melakukan beberapa pelanggaran ringan atau sedang) juga dapat meningkatkan kategori pelanggaran.

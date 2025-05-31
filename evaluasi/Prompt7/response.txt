@@ -1,0 +1,1 @@
+KRS mahasiswa Diploma/Sarjana Tingkat I berisi mata kuliah paket, sehingga mahasiswa tidak dapat mengajukan mata kuliah yang berbeda. Sedangkan mahasiswa Sarjana Tingkat II dan selanjutnya dapat mengganti/menambah/membatalkan mata kuliah.

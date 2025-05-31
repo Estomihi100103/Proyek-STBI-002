@@ -1,0 +1,11 @@
+Sistem penilaian nilai perilaku di IT Del mempertimbangkan tindakan terpuji dan pelanggaran mahasiswa. Nilai dinyatakan dalam huruf dengan skala sebagai berikut:
+
+    A (4,0): Sangat Baik
+    AB (3,5): Antara Baik dengan Sangat Baik
+    B (3,0): Baik
+    BC (2,5): Antara Cukup dengan Baik
+    C (2,0): Cukup
+    D (1,0): Kurang
+    E (0): Gagal
+
+Penilaian dilakukan setiap tengah semester dan akhir semester. Nilai perilaku menjadi salah satu ketentuan untuk memperoleh beasiswa dan menjadi mahasiswa teladan.

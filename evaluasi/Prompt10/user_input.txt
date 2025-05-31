@@ -1,0 +1,1 @@
+Jelaskan secara rinci kategori jenis pelanggaran di Institut Teknologi Del berdasarkan skor poinnya, mulai dari pelanggaran ringan hingga berat, termasuk sub-levelnya. Bagaimana pembagian skor ini memengaruhi klasifikasi pelanggaran?

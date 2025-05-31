@@ -1,0 +1,29 @@
+1. Derajat keberhasilan mahasiswa dinyatakan dalam Indeks Prestasi Semester 
+(IPS), dan Indeks Prestasi Kumulatif (IPK).  
+2. Hasil penilaian capaian pembelajaran lulusan di tiap semester dinyatakan dengan 
+Indeks Prestasi Semester (IPS).  
+3. Hasil penilaian capaian pembelajaran lulusan pada akhir program studi 
+dinyatakan dengan Indeks Prestasi Kumulatif (IPK).  
+4. IPS, dan IPK dihitung dengan menggunakan rumus sebagai berikut:  
+=	∑(			
+)
+ ∑(
+ Keterangan:
+ )- Indeks Prestasi Semester (IPS) sebagaimana dimaksud pada ayat (2) 
+dinyatakan dalam besaran yang dihitung dengan cara menjumlahkan perkalian 
+antara indeks nilai setiap mata kuliah yang ditempuh dan SKS mata kuliah 
+bersangkutan dibagi dengan jumlah SKS mata kuliah yang diambil dalam satu 
+semester.  - Indeks Prestasi Kumulatif (IPK) sebagaimana dimaksud pada ayat (3) 
+dinyatakan dalam besaran yang dihitung dengan cara menjumlahkan perkalian 
+antara indeks nilai setiap mata kuliah yang ditempuh dan SKS mata kuliah 
+bersangkutan dibagi dengan jumlah SKS mata kuliah yang diambil yang telah 
+ditempuh. Jika ada mata kuliah yang diulang, nilai yang diperhitungkan 
+adalah nilai terakhir mata kuliah tersebut saja tanpa memperhitungkan nilai 
+Halaman 25 dari 61 
+mata kuliah tersebut pada pengambilan sebelumnya. Ketentuan ini juga 
+berlaku bagi mata kuliah yang menggantikan mata kuliah yang diambil 
+sebelumnya.  - 
+1. Umum 
+IPS dan IPK merupakan angka desimal dengan 2 digit di belakang koma, 
+dihitung pembulatan ke bawah apabila kurang dari 0,005 dan pembulatan 
+ke atas apabila sama/lebih dari 0,005
